@@ -7,7 +7,8 @@ module.exports = function pdfTextExtract(filePath, options, cb) {
   }
   filePath = path.resolve(filePath)
   var args = [
-    '-layout',
+    '-stdout',
+    '-nodrm',
     '-enc',
     'UTF-8',
     filePath,
@@ -16,6 +17,13 @@ module.exports = function pdfTextExtract(filePath, options, cb) {
   ]
   streamResults(args, options, splitPages)
 
+  function cleanText(pages) {
+    return pages.map(function(html){
+      // pdftohtml loves nobreaking spaces
+      return html.replace(/&#160;/g, " ").trim()
+    })
+  }
+
   function splitPages(err, content) {
     if (err) {
       return cb(err)
@@ -23,8 +31,8 @@ module.exports = function pdfTextExtract(filePath, options, cb) {
     var pages = content.split(/\f/)
     if (!pages) {
       return cb({
-        message: 'pdf-text-extract failed',
-        error: 'no text returned from the pdftotext command',
+        message: 'pdf-html-extract failed',
+        error: 'nothing returned from the pdftohtml command',
         filePath: filePath,
         stack: new Error().stack
       })
@@ -34,13 +42,13 @@ module.exports = function pdfTextExtract(filePath, options, cb) {
     if (!lastPage) {
       pages.pop()
     }
-    cb(null, pages)
+    cb(null, cleanText(pages))
   }
 }
 function streamResults(args, options, cb) {
   var output = ''
   var stderr = ''
-  var command = 'pdftotext'
+  var command = 'pdftohtml'
   var child = spawn(command, args, options)
   child.stdout.setEncoding('utf8')
   child.stderr.setEncoding('utf8')
