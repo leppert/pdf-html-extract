@@ -7,8 +7,9 @@ module.exports = function pdfTextExtract(filePath, options, cb) {
   }
   filePath = path.resolve(filePath)
   var args = [
-    '-stdout',
-    '-nodrm',
+    '-i', // ignore images
+    '-stdout', // send to stdout rather than save a file
+    '-nodrm', // ignore DRM
     '-enc',
     'UTF-8',
     filePath,
