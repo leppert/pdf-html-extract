@@ -1,3 +1,10 @@
+# This is a fork of [pdf-text-extract](https://github.com/nisaacson/pdf-text-extract)
+
+It functions identically to `pdf-text-extract` (aside from, you know,
+outputing HTML instead of plain text), so the original README
+has be preserved below. Just imagine `pdf-html-extract` in place of
+`pdf-text-extract`, `pdftohtml` in place of `pdftotext` and so on.
+
 # PDF Text Extract
 
 Extract text from pdfs that contain searchable pdf text. The module is wrapper that calls the `pdftotext` command to perform the actual extraction
